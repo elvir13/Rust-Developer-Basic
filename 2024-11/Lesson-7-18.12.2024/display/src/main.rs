@@ -24,18 +24,46 @@ use matrix::Matrix;
 
 struct Display {
     // можете добавить сюда любые дополнительные поля
-    matrix: Matrix,
+    pub matrix: Matrix,
+    display_width: u32,
+    display_height: u32,
+    cursor_x: u64,
+    cursor_y: u64,
+    colour: u64,
 }
 
 fn create_display(max_width: u32, max_height: u32, default_colour: u8) -> Display {
     // ваш код сюда
+
     Display {
         matrix: Matrix::new(max_width, max_height, default_colour),
+        display_width: max_width,
+        display_height: max_height,
+        cursor_x: 0,
+        cursor_y: 0,
+        colour: 0,
     }
 }
 
 fn process_commands(display: &mut Display, input: Vec<u64>) {
     // ваш код сюда
+    display.cursor_x = input[1];
+    display.cursor_y = input[2];
+    display.colour = input[4];
+    if display.cursor_x > display.display_width.into()
+        || display.cursor_y > display.display_height.into()
+        || display.colour > 3
+        || display.colour == 0
+    {
+        panic!("error");
+    } else {
+        Matrix::set_colour(
+            &mut display.matrix,
+            display.cursor_x,
+            display.cursor_y,
+            display.colour as u8,
+        );
+    }
 }
 
 // код ниже трогать не нужно, можете просто посмотреть его
