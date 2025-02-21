@@ -47,16 +47,32 @@ fn create_display(max_width: u32, max_height: u32, default_colour: u8) -> Displa
 
 fn process_commands(display: &mut Display, input: Vec<u64>) {
     // ваш код сюда
-    display.cursor_x = input[1];
-    display.cursor_y = input[2];
-    display.colour = input[4];
-    if display.cursor_x > display.display_width.into()
-        || display.cursor_y > display.display_height.into()
-        || display.colour > 3
-        || display.colour == 0
-    {
-        panic!("error");
-    } else {
+    if input.len() < 5 {
+        panic!("Недостаточное количество команд")
+    }
+    let mut index = 0;
+    while index < input.len() {
+        let command = input[index];
+        match command {
+            1 => {
+                display.cursor_x = input[index + 1];
+                display.cursor_y = input[index + 2];
+                if display.cursor_x >= display.display_height.into()
+                    || display.cursor_y >= display.display_width.into()
+                {
+                    panic!("Координаты за пределами дисплея")
+                }
+                index += 3;
+            }
+            2 => {
+                display.colour = input[index + 1];
+                if display.colour > 3 {
+                    panic!("Неизвестный цвет")
+                }
+                index += 2;
+            }
+            _ => panic!("Неизвестная команда"),
+        }
         Matrix::set_colour(
             &mut display.matrix,
             display.cursor_x,
