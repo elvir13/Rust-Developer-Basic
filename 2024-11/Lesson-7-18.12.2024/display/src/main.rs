@@ -66,7 +66,7 @@ fn process_commands(display: &mut Display, input: Vec<u64>) {
             }
             2 => {
                 display.colour = input[index + 1];
-                if display.colour > 3 {
+                if display.colour > 3 || display.colour == 0 {
                     panic!("Неизвестный цвет")
                 }
                 index += 2;
