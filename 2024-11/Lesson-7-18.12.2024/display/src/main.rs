@@ -34,22 +34,18 @@ struct Display {
 
 fn create_display(max_width: u32, max_height: u32, default_colour: u8) -> Display {
     // ваш код сюда
-
     Display {
         matrix: Matrix::new(max_width, max_height, default_colour),
         display_width: max_width,
         display_height: max_height,
         cursor_x: 0,
         cursor_y: 0,
-        colour: 0,
+        colour: default_colour as u64,
     }
 }
 
 fn process_commands(display: &mut Display, input: Vec<u64>) {
     // ваш код сюда
-    if input.len() < 5 {
-        panic!("Недостаточное количество команд")
-    }
     let mut index = 0;
     while index < input.len() {
         let command = input[index];
@@ -69,19 +65,18 @@ fn process_commands(display: &mut Display, input: Vec<u64>) {
                 if display.colour > 3 || display.colour == 0 {
                     panic!("Неизвестный цвет")
                 }
+                Matrix::set_colour(
+                    &mut display.matrix,
+                    display.cursor_x,
+                    display.cursor_y,
+                    display.colour as u8,
+                );
                 index += 2;
             }
             _ => panic!("Неизвестная команда"),
         }
-        Matrix::set_colour(
-            &mut display.matrix,
-            display.cursor_x,
-            display.cursor_y,
-            display.colour as u8,
-        );
     }
 }
-
 // код ниже трогать не нужно, можете просто посмотреть его
 
 // тесты
